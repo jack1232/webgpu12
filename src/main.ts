@@ -48,7 +48,7 @@ const Create3DObject = async (isAnimation = true) => {
             entryPoint: "main",
             targets: [
                 {
-                    format: gpu.swapChainFormat as GPUTextureFormat
+                    format: gpu.format
                 }
             ]
         },
@@ -92,7 +92,7 @@ const Create3DObject = async (isAnimation = true) => {
         }]
     });
 
-    let textureView = gpu.swapChain.getCurrentTexture().createView();
+    let textureView = gpu.context.getCurrentTexture().createView();
     const depthTexture = device.createTexture({
         size: [gpu.canvas.width, gpu.canvas.height, 1],
         format: "depth24plus",
@@ -101,7 +101,7 @@ const Create3DObject = async (isAnimation = true) => {
     const renderPassDescription = {
         colorAttachments: [{
             view: textureView,
-            loadValue: { r: 0.5, g: 0.5, b: 0.8, a: 1.0 }, //background color
+            loadValue: { r: 0.2, g: 0.247, b: 0.314, a: 1.0 }, //background color
             storeOp: 'store'
         }],
         depthStencilAttachment: {
@@ -125,7 +125,7 @@ const Create3DObject = async (isAnimation = true) => {
         CreateTransforms(modelMatrix,[0,0,0], rotation);
         mat4.multiply(mvpMatrix, vpMatrix, modelMatrix);
         device.queue.writeBuffer(uniformBuffer, 0, mvpMatrix as ArrayBuffer);
-        textureView = gpu.swapChain.getCurrentTexture().createView();
+        textureView = gpu.context.getCurrentTexture().createView();
         renderPassDescription.colorAttachments[0].view = textureView;
         const commandEncoder = device.createCommandEncoder();
         const renderPass = commandEncoder.beginRenderPass(renderPassDescription as GPURenderPassDescriptor);
