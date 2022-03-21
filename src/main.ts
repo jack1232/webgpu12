@@ -101,18 +101,16 @@ const Create3DObject = async (isAnimation = true) => {
         colorAttachments: [{
             view: textureView,
             clearValue: { r: 0.2, g: 0.247, b: 0.314, a: 1.0 }, //background color
-            loadValue: { r: 0.2, g: 0.247, b: 0.314, a: 1.0 }, //background color
             loadOp: 'clear',
             storeOp: 'store'
         }],
         depthStencilAttachment: {
             view: depthTexture.createView(),
             depthClearValue: 1.0,
-            depthLoadValue: 1.0,
             depthLoadOp:"clear",
             depthStoreOp: "store",
             stencilClearValue: 0,
-            stencilLoadValue: 0,
+            stencilLoadOp: 'clear',
             stencilStoreOp: "store"
         }
     };
