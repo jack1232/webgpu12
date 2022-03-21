@@ -1,5 +1,5 @@
 import { InitGPU, CreateGPUBuffer, CreateGPUBufferUint, CreateTransforms, CreateViewProjection, CreateAnimation } from './helper';
-import { Shaders } from './shaders';
+import shader from './shader.wgsl';
 import { CubeData1 } from './vertex_data';
 import { vec3, mat4 } from 'gl-matrix';
 import $ from 'jquery';
@@ -16,13 +16,12 @@ const Create3DObject = async (isAnimation = true) => {
     const vertexBuffer = CreateGPUBuffer(device, cubeData.vertexData);
     const indexBuffer = CreateGPUBufferUint(device, cubeData.indexData);
  
-    const shader = Shaders();
     const pipeline = device.createRenderPipeline({
         vertex: {
             module: device.createShaderModule({                    
-                code: shader.vertex
+                code: shader
             }),
-            entryPoint: "main",
+            entryPoint: "vs_main",
             buffers:[
                 {
                     arrayStride: 24,
@@ -43,9 +42,9 @@ const Create3DObject = async (isAnimation = true) => {
         },
         fragment: {
             module: device.createShaderModule({                    
-                code: shader.fragment
+                code: shader
             }),
-            entryPoint: "main",
+            entryPoint: "fs_main",
             targets: [
                 {
                     format: gpu.format
@@ -101,13 +100,18 @@ const Create3DObject = async (isAnimation = true) => {
     const renderPassDescription = {
         colorAttachments: [{
             view: textureView,
+            clearValue: { r: 0.2, g: 0.247, b: 0.314, a: 1.0 }, //background color
             loadValue: { r: 0.2, g: 0.247, b: 0.314, a: 1.0 }, //background color
+            loadOp: 'clear',
             storeOp: 'store'
         }],
         depthStencilAttachment: {
             view: depthTexture.createView(),
+            depthClearValue: 1.0,
             depthLoadValue: 1.0,
+            depthLoadOp:"clear",
             depthStoreOp: "store",
+            stencilClearValue: 0,
             stencilLoadValue: 0,
             stencilStoreOp: "store"
         }
@@ -135,7 +139,7 @@ const Create3DObject = async (isAnimation = true) => {
         renderPass.setIndexBuffer(indexBuffer, 'uint32');
         renderPass.setBindGroup(0, uniformBindGroup);
         renderPass.drawIndexed(numberOfVertices);
-        renderPass.endPass();
+        renderPass.end();
 
         device.queue.submit([commandEncoder.finish()]);
     }
