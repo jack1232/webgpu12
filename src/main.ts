@@ -3,8 +3,8 @@ import shader from './shader.wgsl';
 import { CubeData1 } from './vertex_data';
 import { vec3, mat4 } from 'gl-matrix';
 import $ from 'jquery';
+import "./site.css";
 const createCamera = require('3d-view-controls');
-
 
 const Create3DObject = async (isAnimation = true) => {
     const gpu = await InitGPU();
