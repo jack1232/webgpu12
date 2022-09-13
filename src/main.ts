@@ -17,6 +17,7 @@ const Create3DObject = async (isAnimation = true) => {
     const indexBuffer = CreateGPUBufferUint(device, cubeData.indexData);
  
     const pipeline = device.createRenderPipeline({
+        layout:'auto',
         vertex: {
             module: device.createShaderModule({                    
                 code: shader
@@ -109,9 +110,9 @@ const Create3DObject = async (isAnimation = true) => {
             depthClearValue: 1.0,
             depthLoadOp:"clear",
             depthStoreOp: "store",
-            stencilClearValue: 0,
-            stencilLoadOp: 'clear',
-            stencilStoreOp: "store"
+            //stencilClearValue: 0,
+            //stencilLoadOp: 'clear',
+            //stencilStoreOp: "store"
         }
     };
     
